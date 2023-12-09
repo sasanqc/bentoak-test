@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import classNames from "classnames";
 import Logo from "./components/Logo";
+import { Button } from "@radix-ui/themes";
 const links = [
   { path: "/products", label: "Products" },
   { path: "/charts", label: "Charts" },
@@ -31,7 +32,7 @@ const NavBar = () => {
 
   return (
     <nav className="flex items-center justify-between px-8 py-4 border-b border-b-gray-300">
-      <div className="flex gap-10 items-center">
+      <div className="flex gap-4 md:gap-10 items-center">
         <Logo />
         <ul className="flex gap-4">
           {links.map((el) => (

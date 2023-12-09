@@ -1,24 +1,38 @@
-import React from "react";
-async function getProducts() {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+import Pagination from "@/app/components/Pagination";
+import ProductList from "./list";
+import createQueryString from "@/app/utils/createQueryString";
+import getProducts from "@/app/services/product";
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
+interface Props {
+  searchParams: { q: string; page: string };
 }
 
-const Products = async () => {
-  // try {
-  //   const data = await getProducts();
-  //   console.log("data: ", data);
-  // } catch (error) {
-  //   console.log("failed to fetch products");
-  // }
+const PGAE_SIZE = 10;
 
-  const initialData = await getProducts();
-  console.log("initialData:", initialData);
-  return <div>Products</div>;
+const Products = async ({ searchParams }: Props) => {
+  const page = parseInt(searchParams.page) || 1;
+  const queryStr = createQueryString({
+    q: searchParams.q || "",
+    limit: PGAE_SIZE,
+    skip: (page - 1) * PGAE_SIZE,
+  });
+  let data = { products: [], total: "0", skip: "0", limit: PGAE_SIZE };
+  try {
+    data = await getProducts(queryStr);
+  } catch (error) {
+    console.log("Failed to get data");
+  }
+
+  return (
+    <div className="p-8 ">
+      <ProductList list={data.products} />
+      <Pagination
+        pageSize={PGAE_SIZE}
+        currentPage={page}
+        itemCount={parseInt(data.total)}
+      />
+    </div>
+  );
 };
 
 export default Products;

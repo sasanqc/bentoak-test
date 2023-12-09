@@ -16,5 +16,5 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 .btn {
-  @apply bg-indigo-600 py-2 px-4 rounded-md text-gray-200 hover:bg-indigo-500 transition-colors duration-300;
+  @apply bg-indigo-600 py-2 px-4 rounded-md text-gray-200 hover:bg-indigo-500 transition-colors duration-300 font-semibold;
 }
