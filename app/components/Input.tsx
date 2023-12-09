@@ -1,6 +1,4 @@
-import { Span } from "next/dist/trace";
-import React from "react";
-import { UseFormRegister, FieldValues, RegisterOptions } from "react-hook-form";
+import { FieldValues, UseFormRegister } from "react-hook-form";
 interface Props {
   name: string;
   label: string;

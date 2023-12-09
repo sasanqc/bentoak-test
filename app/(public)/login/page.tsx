@@ -1,15 +1,13 @@
 "use client";
-import Input from "@/app/components/Input";
-import Logo from "@/app/components/Logo";
-import User from "@/app/model/User";
-import loginSchema from "@/app/model/loginSchema";
+import { Input, Logo } from "@/app/components";
+import { loginSchema } from "@/app/model";
+import { login } from "@/app/services/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@radix-ui/themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-
 const LoginPage = () => {
   const router = useRouter();
   const {
@@ -19,15 +17,13 @@ const LoginPage = () => {
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
-  const onSubmit = (data: FieldValues) => {
-    const allUsers = JSON.parse(localStorage.getItem("users") || "[]") || [];
-    const loggedInUser = allUsers.find((el: User) => el.email === data.email);
-    if (loggedInUser && loggedInUser.password === data.password) {
-      localStorage.setItem("currentUser", loggedInUser);
-      router.push("/");
+  const onSubmit = async (data: FieldValues) => {
+    try {
+      await login(data as { email: string; password: string });
       toast.success("Logged in successfully");
-    } else {
-      toast.error("Email or Password is wrong!");
+      setTimeout(() => router.push("/"), 700);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
   return (
@@ -61,9 +57,9 @@ const LoginPage = () => {
       />
 
       <div className="flex gap-6 mt-6">
-        <button type="submit" className="btn">
+        <Button type="submit" className="btn">
           Login
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -1,8 +1,7 @@
 "use client";
-import Searchbar from "@/app/components/Searchbar";
+import { Searchbar } from "@/app/components";
 import Product from "@/app/model/Product";
 import { Table } from "@radix-ui/themes";
-import React, { useState } from "react";
 interface Props {
   list: Product[];
 }

@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import signupSchema from "@/app/model/signupSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@radix-ui/themes";
+import { createUser } from "@/app/services/user";
 const RegisterPage = () => {
   const router = useRouter();
   const {
@@ -20,20 +22,18 @@ const RegisterPage = () => {
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = (data: FieldValues) => {
+  const onSubmit = async (data: FieldValues) => {
     delete data.repeatPassword;
     const newUser = { ...data, id: uuidv4() } as User;
-    const allUsers = JSON.parse(localStorage.getItem("users") || "[]") || [];
-    if (allUsers.find((el: User) => el.email === newUser.email)) {
-      toast.error("This email already exists");
-    } else {
-      allUsers.push(newUser);
-      localStorage.setItem("users", JSON.stringify(allUsers));
-      localStorage.setItem("currentUser", JSON.stringify(newUser));
+    try {
+      await createUser(newUser);
       toast.success("User created successfully");
-      router.push("/");
+      setTimeout(() => router.push("/"), 700);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
+
   return (
     <form
       className="shadow-lg p-10 rounded-md text-center flex flex-col items-center"
@@ -77,10 +77,10 @@ const RegisterPage = () => {
         error={errors?.repeatPassword?.message?.toString()}
       />
       <div className="flex gap-6 mt-6">
-        <button type="reset">Cancel</button>
-        <button type="submit" className="btn">
+        <Button type="reset">Cancel</Button>
+        <Button type="submit" className="btn">
           Submit
-        </button>
+        </Button>
       </div>
     </form>
   );

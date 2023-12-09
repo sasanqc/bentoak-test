@@ -1,4 +1,4 @@
-import Pagination from "@/app/components/Pagination";
+import { Pagination } from "@/app/components";
 import ProductList from "./list";
 import createQueryString from "@/app/utils/createQueryString";
 import getProducts from "@/app/services/product";
